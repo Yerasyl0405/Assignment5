@@ -39,7 +39,7 @@ class SearchViewModel(private val api: KinopoiskApi) : ViewModel() {
                 if (response.isSuccessful) {
                     response.body()?.let { movieCollectionResponse ->
                         val updatedMap = _moviesBySearch.value.toMutableMap()
-                        updatedMap[searchText] = movieCollectionResponse.films.take(1)
+                        updatedMap[searchText] = movieCollectionResponse.films
                         _moviesBySearch.emit(updatedMap)
                     } ?: run {
                         // In case of no data

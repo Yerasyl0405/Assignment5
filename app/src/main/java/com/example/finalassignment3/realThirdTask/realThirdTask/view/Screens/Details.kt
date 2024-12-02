@@ -201,7 +201,7 @@ fun Head(film: Movie?, navController: NavController) {
                     color = Color(0xFFB5B5C9)
                 )
                 Text(
-                    text = "${it.genres[1].genre} ",
+                    text = it.genres.getOrNull(1)?.genre ?: "unknown",
                     fontSize = 12.sp,
                     fontWeight = FontWeight.W400,
                     lineHeight = 13.2.sp,

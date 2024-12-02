@@ -259,7 +259,7 @@ fun FilmographySection(navController: NavController, staffId: Int, person: Staff
             )
             Text(
                 text = "К списку",
-                modifier = Modifier.clickable { navController.navigate(git remote add origin https://github.com/Yerasyl0405/Assignment5.git
+                modifier = Modifier.clickable { navController.navigate(
                     "actor_screen/" + staffId + "/" + person?.nameRu) })
 
         }

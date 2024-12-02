@@ -23,8 +23,10 @@ fun SearchSettingsScreen(navController: NavController) {
     var selectedOption by remember { mutableStateOf("Все") }
     var sliderValue by remember { mutableStateOf(1f) }
     var selectedOption1 by remember { mutableStateOf("Дата") }
-
-
+    var selectedCountry by remember { mutableStateOf("Россия") }
+    var selectedGenre by remember { mutableStateOf("Комедия") }
+    val selectedFromYear = remember { mutableStateOf(2000) }
+    val selectedToYear = remember { mutableStateOf(2024) }
 
     Column(
         modifier = Modifier
@@ -37,7 +39,15 @@ fun SearchSettingsScreen(navController: NavController) {
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = { /* Back button logic */ }) {
+            IconButton(onClick = {
+                navController.previousBackStackEntry?.savedStateHandle?.set("selectedOption", selectedOption)
+                navController.previousBackStackEntry?.savedStateHandle?.set("selectedCountry", selectedCountry)
+                navController.previousBackStackEntry?.savedStateHandle?.set("selectedGenre", selectedGenre)
+                navController.previousBackStackEntry?.savedStateHandle?.set("selectedFromYear", selectedFromYear.value)
+                navController.previousBackStackEntry?.savedStateHandle?.set("selectedToYear", selectedToYear.value)
+                navController.previousBackStackEntry?.savedStateHandle?.set("sliderValue", sliderValue.toInt())
+                navController.popBackStack()
+            }) {
                 Icon(Icons.Default.ArrowBack, contentDescription = "Back")
             }
             Text(
@@ -49,12 +59,11 @@ fun SearchSettingsScreen(navController: NavController) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Selection row for "Все", "Фильмы", "Сериалы"
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceAround
         ) {
-            listOf("Все", "Фильмы", "Сериалы").forEach { option ->
+            listOf("Все", "FILM", "TV_SERIES").forEach { option ->
                 Box(
                     modifier = Modifier
                         .selectable(
@@ -80,21 +89,17 @@ fun SearchSettingsScreen(navController: NavController) {
         Spacer(modifier = Modifier.height(16.dp))
 
         // Страна
-        var selectedCountry by remember { mutableStateOf("Россия") }
-        var selectedGenre by remember { mutableStateOf("Комедия") }
-        val selectedFromYear = remember { mutableStateOf("Not Selected") }
-        val selectedToYear = remember { mutableStateOf("Not Selected") }
 
         // Observe savedStateHandle for results
         val currentBackStackEntry = navController.currentBackStackEntry
         val savedStateHandle = currentBackStackEntry?.savedStateHandle
 
         savedStateHandle?.getStateFlow<Int>("selectedFromYear", -1)?.collectAsState()?.let {
-            if (it.value != -1) selectedFromYear.value = it.value.toString()
+            if (it.value != -1) selectedFromYear.value = it.value
         }
 
         savedStateHandle?.getStateFlow<Int>("selectedToYear", -1)?.collectAsState()?.let {
-            if (it.value != -1) selectedToYear.value = it.value.toString()
+            if (it.value != -1) selectedToYear.value = it.value
         }
 
 
@@ -114,20 +119,17 @@ fun SearchSettingsScreen(navController: NavController) {
                 }
         }
         SettingItem("Страна" ,  selectedCountry,navController,selectedCountry)
-        // Жанр
         SettingItem1("Жанр", selectedGenre,navController,selectedGenre)
-        // Год
 
 
-                SettingItem2( "Год", "57",navController, selectedFromYear.value,
-                    selectedToYear.value
-                )
+
+        SettingItem2( "Год", "57",navController, selectedFromYear.value.toString(),
+            selectedToYear.value.toString())
 
 
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Рейтинг slider
         Text(text = "Рейтинг", style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 16.sp))
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -148,9 +150,7 @@ fun SearchSettingsScreen(navController: NavController) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Sorting options
         Text(text = "Сортировать", style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 16.sp))
-        // Selection row for "Все", "Фильмы", "Сериалы"
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceAround
@@ -234,4 +234,3 @@ fun SettingItem2( label: String, value: String, navController: NavController, se
         Text(text = "$selectedYear $selectedToYear", color = Color.Gray, fontSize = 14.sp)
     }
 }
-

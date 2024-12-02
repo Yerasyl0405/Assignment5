@@ -59,14 +59,14 @@ class MainActivity : ComponentActivity() {
         setContent {
            // CountrySelectionScreen()
            // SearchSettingsScreen()
-           // SearchPage(viewModel)
+           // SearchPage()
             //ProfileScreen()
            // LoadingPage()...
           // ActorPage(staffId = 659)
            // FullStaffList(kinopoiskid = 963)
             //SimilarFilmScreen(filmId = 734)
           //FilmScreen(kinopoiskId = 658)
-            NavigationClass(viewModell)
+            NavigationClass(viewModell,viewModel)
 
         }
     }

@@ -41,15 +41,17 @@ import com.example.finalassignment3.realThirdTask.realThirdTask.view.Screens.Gen
 import com.example.finalassignment3.realThirdTask.realThirdTask.view.Screens.LoadingPage
 import com.example.finalassignment3.realThirdTask.realThirdTask.view.Screens.MovieCollectionRow
 import com.example.finalassignment3.realThirdTask.realThirdTask.view.Screens.MoviesByCollectionScreen
+import com.example.finalassignment3.realThirdTask.realThirdTask.view.Screens.SearchPage
 import com.example.finalassignment3.realThirdTask.realThirdTask.view.Screens.SearchSettingsScreen
 import com.example.finalassignment3.realThirdTask.realThirdTask.view.Screens.YearSelectionScreen
 import com.example.finalassignment3.realThirdTask.realThirdTask.view.viewmodel.ActorScreen
 import com.example.finalassignment3.realThirdTask.realThirdTask.view.viewmodel.ActorViewModel
+import com.example.finalassignment3.realThirdTask.realThirdTask.view.viewmodel.SearchViewModel
 import retrofit2.Response
 
 @Composable
 fun NavGraph(
-    navHostController: NavHostController,viewModell: ActorViewModel
+    navHostController: NavHostController,viewModell: ActorViewModel,viewModel1: SearchViewModel
 ) {
     val viewModel: MovieViewModel = remember { MovieViewModel(RetrofitInstance.api) }
     NavHost(navController = navHostController, startDestination = "MovieScreen"){
@@ -60,7 +62,10 @@ fun NavGraph(
             MoviesByCollectionScreen(collectionTypes, viewModel, collectionType, navHostController)
         }
         composable("screen_2") {
-            SearchSettingsScreen(navHostController)
+            SearchPage(viewModel1,navController = navHostController)
+        }
+        composable("search_settings"){
+            SearchSettingsScreen(navController = navHostController)
         }
         composable("screen_3") {
             Screen3()

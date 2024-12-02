@@ -30,11 +30,12 @@ import com.example.finalassignment3.realThirdTask.realThirdTask.view.Screens.Scr
 import com.example.finalassignment3.realThirdTask.realThirdTask.view.Screens.Main_Screen
 import com.example.finalassignment3.realThirdTask.realThirdTask.view.Screens.FilmScreen
 import com.example.finalassignment3.realThirdTask.realThirdTask.view.viewmodel.ActorViewModel
+import com.example.finalassignment3.realThirdTask.realThirdTask.view.viewmodel.SearchViewModel
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun NavigationClass(viewModell: ActorViewModel) {
+fun NavigationClass(viewModell: ActorViewModel,viewModel: SearchViewModel) {
 
     val navController = rememberNavController()
     
@@ -48,7 +49,7 @@ fun NavigationClass(viewModell: ActorViewModel) {
                     ScreenPager(navController)
                 }
                 composable("newScreen") {
-                    Main_Screen(viewModell)
+                    Main_Screen(viewModell,viewModel)
                 }
                 composable(
                     route = "NewScreen3/{id}",

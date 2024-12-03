@@ -34,6 +34,7 @@ import com.example.assignment3.network.RetrofitInstance.api
 import com.example.assignment3.view.MovieViewModel
 import com.example.finalassignment3.realThirdTask.realThirdTask.model.UiState
 import com.example.finalassignment3.realThirdTask.realThirdTask.view.Screens.CountrySelectionScreen
+import com.example.finalassignment3.realThirdTask.realThirdTask.view.Screens.FavouritesPage
 
 import com.example.finalassignment3.realThirdTask.realThirdTask.view.Screens.FilmScreen
 import com.example.finalassignment3.realThirdTask.realThirdTask.view.Screens.FullGalleryScreen
@@ -43,6 +44,7 @@ import com.example.finalassignment3.realThirdTask.realThirdTask.view.Screens.Mov
 import com.example.finalassignment3.realThirdTask.realThirdTask.view.Screens.MoviesByCollectionScreen
 import com.example.finalassignment3.realThirdTask.realThirdTask.view.Screens.SearchPage
 import com.example.finalassignment3.realThirdTask.realThirdTask.view.Screens.SearchSettingsScreen
+import com.example.finalassignment3.realThirdTask.realThirdTask.view.Screens.WantToWatchPage
 import com.example.finalassignment3.realThirdTask.realThirdTask.view.Screens.YearSelectionScreen
 import com.example.finalassignment3.realThirdTask.realThirdTask.view.viewmodel.ActorScreen
 import com.example.finalassignment3.realThirdTask.realThirdTask.view.viewmodel.ActorViewModel
@@ -67,9 +69,9 @@ fun NavGraph(
         composable("search_settings"){
             SearchSettingsScreen(navController = navHostController)
         }
-        composable("screen_3") {
-            Screen3()
-        }
+
+
+
 
         composable("full_gallery/{filmId}"){ backStackEntry ->
             val filmId  = backStackEntry.arguments?.getString("filmId")?.toIntOrNull()
@@ -88,10 +90,8 @@ fun NavGraph(
             route = "NewScreen3/{id}",
             arguments = listOf(navArgument("id") { type = NavType.IntType })
         ) { backStackEntry ->
-            // Retrieve the 'id' argument
             val id = backStackEntry.arguments?.getInt("id") ?: 0
 
-            // Pass it to FilmScreen
             FilmScreen(kinopoiskId = id, navController = navHostController)
         }
         composable("ActorPage/{staffId}") { backStackEntry ->
@@ -218,7 +218,9 @@ LoadingPage()        }
             }
         }
 
-        is UiState.Error -> TODO()
+        is UiState.Error ->     throw NotImplementedError("MovieScreen functionality is not implemented yet")
+
+
 
     }
 }

@@ -43,7 +43,6 @@ fun GenreselectionPage(navController: NavController, genre: String) {
             .fillMaxSize()
             .background(Color.White)
     ) {
-        // Top Bar
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -55,12 +54,11 @@ fun GenreselectionPage(navController: NavController, genre: String) {
             }
             Text(
                 text = "Жанр",
-                style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold)
-            )
+                style = TextStyle(fontSize =12.sp , lineHeight = 13.2.sp , fontWeight = FontWeight.W600), modifier = Modifier.padding(start = 100.dp)            )
         }
 
 
-        // Search Bar
+
         BasicTextField(
             value = searchText,
             onValueChange = { searchText = it },
@@ -83,7 +81,6 @@ fun GenreselectionPage(navController: NavController, genre: String) {
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Country List
         Column(modifier = Modifier.fillMaxSize()) {
             genre.forEach { country ->
                 GenreListItem (

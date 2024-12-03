@@ -3,6 +3,7 @@ package com.example.finalassignment3.realThirdTask.realThirdTask.view.Screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,6 +18,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -25,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -36,6 +39,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.motionEventSpy
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -53,7 +57,7 @@ import com.example.finalassignment3.realThirdTask.realThirdTask.model.Genre
 import com.example.finalassignment3.realThirdTask.realThirdTask.view.viewmodel.SearchViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchPage(viewModel: SearchViewModel = viewModel() , navController: NavController) {
+fun SearchPage(viewModel: SearchViewModel = viewModel(), navController: NavController) {
     val moviesMap by viewModel.moviesBySearch.collectAsState()
 
     val savedStateHandle = navController.currentBackStackEntry?.savedStateHandle
@@ -62,8 +66,8 @@ fun SearchPage(viewModel: SearchViewModel = viewModel() , navController: NavCont
         ?.collectAsState()?.value ?: "Россия"
     val selectedGenre = savedStateHandle?.getStateFlow("selectedGenre", "Комедия")
         ?.collectAsState()?.value ?: "Комедия"
-    val selectedType = savedStateHandle?.getStateFlow("selectedOption", "Все")
-    ?.collectAsState()?.value ?: " Все"
+    val selectedType = savedStateHandle?.getStateFlow("selectedOption", "VSE")
+        ?.collectAsState()?.value ?: " Все"
 
     val selectedFromYear = savedStateHandle?.getStateFlow("selectedFromYear", 2000)
         ?.collectAsState()?.value ?: 2000
@@ -72,6 +76,8 @@ fun SearchPage(viewModel: SearchViewModel = viewModel() , navController: NavCont
     val sliderValue = savedStateHandle?.getStateFlow("sliderValue", 1f)
         ?.collectAsState()?.value?.toInt() ?: 1
     var searchText by remember { mutableStateOf("") }
+    var str = "К сожалению, по вашему запросу"
+    var str2 = "ничего не найдено"
 
     LaunchedEffect(searchText) {
         if (searchText.isNotEmpty()) {
@@ -79,77 +85,105 @@ fun SearchPage(viewModel: SearchViewModel = viewModel() , navController: NavCont
         }
     }
 
-    Column(modifier = Modifier.fillMaxSize()) {
-        Row(modifier = Modifier.padding(start = 26.dp, end = 26.dp).height(56.dp).clip(shape = RoundedCornerShape(56.dp)), verticalAlignment = Alignment.CenterVertically) {
+    var type= 0;
+
+    Column(modifier = Modifier.fillMaxSize().padding(top= 20.dp)) {
+        Row(
+            modifier = Modifier
+                .padding(start = 26.dp)
+                .height(56.dp)
+                .clip(shape = RoundedCornerShape(56.dp)),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Icon(
                 imageVector = Icons.Default.Search,
                 contentDescription = "Search",
                 tint = Color.Gray,
-                modifier = Modifier.size(20.dp) // Adjust the icon size
+                modifier = Modifier.size(20.dp)
             )
             TextField(
                 value = searchText,
                 onValueChange = { newText -> searchText = newText },
-
                 placeholder = {
                     Text(
-                        text = "Фильмы, актёры, режиссёры", // Placeholder text
-                        fontSize = 14.sp, // Adjust font size for better readability
-                        color = Color.Gray // Placeholder text color
+                        text = "Фильмы, актёры, режиссёры",
+                        fontSize = 14.sp,
+                        color = Color.Gray
                     )
                 },
-                singleLine = true, // Ensure single-line text input
+                singleLine = true,
                 colors = TextFieldDefaults.textFieldColors(
-                    containerColor = Color.Transparent, // Make the TextField's container transparent
-                    focusedIndicatorColor = Color.Transparent, // Remove focus indicator
-                    unfocusedIndicatorColor = Color.Transparent, // Remove unfocused indicator
+                    containerColor = Color.Transparent,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
                 ),
+            )
+            Spacer(modifier = Modifier.padding(start = 4.dp))
+            Icon(
+                imageVector = Icons.Default.Build,
+                contentDescription = "Search",
+                tint = Color.Gray,
+                modifier = Modifier.size(20.dp).clickable { navController.navigate("search_settings")}
+            )
+            Spacer(modifier = Modifier.padding(start = 16.dp))
 
-            )
-            Box(modifier = Modifier.height(40.dp).width(40.dp).clickable { navController.navigate("search_settings")}){
-            Image(
-              painter = painterResource(R.drawable.filter), contentDescription = "",
-                 // Adjust the icon size
-                modifier = Modifier.fillMaxSize()
-            )
-        }}
-        var era = 0.0;
-        var nur = false;
+
+        }
+        var noFound = false;
+        if(moviesMap.isEmpty()){
+            noFound = false;
+        }
 
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             val movies = moviesMap[searchText]
-                if (movies != null && movies.isNotEmpty()) {
-                    items(movies) { movie ->
-                        if(movie.rating=="null"){
-                            era = 0.0
-                        }else{
-                            era = movie.rating.toDouble()
-                        }
-                        movie.genres.forEach(){genre->
-                            if(genre.genre==selectedGenre.toLowerCase()){
-                                nur=true
+            if (movies != null && movies.isNotEmpty()) {
+
+                items(movies) { movie ->
+                    var nur = false
+                    var era = 0.0
+                    if (movie.rating == "null") {
+                        era = 0.0
+                    } else {
+                        era = movie.rating.toDouble()
+                    }
 
 
-                            }
+                    if(selectedType=="VSE"){
+                        type = 1;
 
+                    }
 
-                        }
-
-
-
-                            if (selectedToYear > movie.year.toInt() && selectedFromYear < movie.year.toInt() && nur==true && sliderValue.toDouble()<era && selectedType.toString().toLowerCase()==movie.type.toLowerCase()){
-                                MovieItem(movie = movie)
-
+                    movie.genres.forEach { genre ->
+                        if (genre.genre == selectedGenre.toLowerCase()) {
+                            nur = true
                         }
                     }
-            } else {
-                item {
-                    Text("No movies found.", modifier = Modifier.padding(16.dp))
+
+                    if (selectedToYear > movie.year.toInt() && selectedFromYear < movie.year.toInt() &&
+                        nur && sliderValue.toDouble() < era && (selectedType.toString().toLowerCase() == movie.type.toLowerCase() || type==1)
+                    ) {
+str = ""
+str2 = ""
+
+                        MovieItem(movie = movie)
+                    }
                 }
+
+                if (noFound==false ) {
+                    item {
+                        Column(modifier = Modifier.padding(start = 52.dp, top  = 50.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(str, fontWeight = FontWeight.W500, fontSize = 16.sp, lineHeight = 17.6.sp)
+                            Text(str2, fontWeight = FontWeight.W500, fontSize = 16.sp, lineHeight = 17.6.sp)
+
+                        }}
+                }
+            } else {
+
             }
         }
     }
 }
+
 
 
 

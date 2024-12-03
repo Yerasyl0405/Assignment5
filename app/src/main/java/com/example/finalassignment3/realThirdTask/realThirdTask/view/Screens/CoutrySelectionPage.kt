@@ -28,7 +28,6 @@ fun CountrySelectionScreen(navController: NavController,country: String) {
             .fillMaxSize()
             .background(Color.White)
     ) {
-        // Top Bar
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -40,12 +39,10 @@ fun CountrySelectionScreen(navController: NavController,country: String) {
             }
             Text(
                 text = "Страна",
-                style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold)
-            )
+                style = TextStyle(fontSize =12.sp , lineHeight = 13.2.sp , fontWeight = FontWeight.W600), modifier = Modifier.padding(start = 90.dp)            )
         }
 
 
-        // Search Bar
         BasicTextField(
             value = searchText,
             onValueChange = { searchText = it },
@@ -68,7 +65,6 @@ fun CountrySelectionScreen(navController: NavController,country: String) {
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Country List
         Column(modifier = Modifier.fillMaxSize()) {
             countries.forEach { country ->
                 CountryListItem(

@@ -193,3 +193,40 @@ class SimilarFilmsViewModel(private val api: KinopoiskApi) : ViewModel() {
         }
     }
 }
+
+class KinoViewModel : ViewModel() {
+    private val _watchedMovies = MutableStateFlow<List<Movie>>(emptyList())
+    val watchedMovies: StateFlow<List<Movie>> = _watchedMovies
+    private val _favouriteMovies = MutableStateFlow<List<Movie>>(emptyList())
+    val favouriteMovies: StateFlow<List<Movie>> = _favouriteMovies
+    private val _wantToWatchMovies = MutableStateFlow<List<Movie>>(emptyList())
+    val wantToWatchMovies: StateFlow<List<Movie>> = _wantToWatchMovies
+
+    fun addWatchedMovie(movie: Movie) {
+        if (!_watchedMovies.value.contains(movie)) {
+            _watchedMovies.value = _watchedMovies.value + movie
+        }
+    }
+
+    fun clearWatchedMovies() {
+        _watchedMovies.value = emptyList()
+    }
+    fun addFavouriteMovie(movie: Movie) {
+        if (!_favouriteMovies.value.contains(movie)) {
+            _favouriteMovies.value = _favouriteMovies.value + movie
+        }
+    }
+
+    fun clearFavouriteMovies() {
+        _favouriteMovies.value = emptyList()
+    }
+    fun addWantToWatchMovie(movie: Movie) {
+        if (!_wantToWatchMovies.value.contains(movie)) {
+            _wantToWatchMovies.value = _wantToWatchMovies.value + movie
+        }
+    }
+
+    fun clearWantToWatchMovies() {
+        _wantToWatchMovies.value = emptyList()
+    }
+}

@@ -30,28 +30,24 @@ class SearchViewModel(private val api: KinopoiskApi) : ViewModel() {
     val moviesBySearch: StateFlow<Map<String, List<FilmXX>>> get() = _moviesBySearch
 
     fun fetchMoviesBySearch(searchText: String) {
-        // Avoid fetching if the searchText is already in the map
         if (_moviesBySearch.value.containsKey(searchText)) return
 
         viewModelScope.launch {
             try {
-                val response = api.getFilmsByKeyword(searchText) // Use the API call
+                val response = api.getFilmsByKeyword(searchText)
                 if (response.isSuccessful) {
                     response.body()?.let { movieCollectionResponse ->
                         val updatedMap = _moviesBySearch.value.toMutableMap()
                         updatedMap[searchText] = movieCollectionResponse.films
                         _moviesBySearch.emit(updatedMap)
                     } ?: run {
-                        // In case of no data
                         _moviesBySearch.emit(_moviesBySearch.value + (searchText to emptyList()))
                     }
                 } else {
-                    // Handle unsuccessful response
                     _moviesBySearch.emit(_moviesBySearch.value + (searchText to emptyList()))
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                // Handle failure by emitting an empty list
                 _moviesBySearch.emit(_moviesBySearch.value + (searchText to emptyList()))
             }
         }
